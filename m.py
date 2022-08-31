@@ -5,8 +5,8 @@ from api import SsauAPI
 
 async def main():
     api = SsauAPI()
-    f = await api.get_institutes_and_faculties()
-    print(len(f), f)
+    f = await api.get_timetable_by(755922237, 1)
+    print(f)
 
 if __name__ == '__main__':
     asyncio.run(main())
