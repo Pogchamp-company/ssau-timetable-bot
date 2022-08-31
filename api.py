@@ -36,15 +36,15 @@ class SsauAPI:
     async def get_groups(self, faculty: int, course: int):
         page = await self._request(f'/rasp/faculty/{faculty}?course={course}')
         soup = BeautifulSoup(page, features='html.parser')
-        return [int(re.search(r'\d+', container.attrs['href']).group())
-                  for container in soup.find_all('a', class_='group-catalog__group')]
+        return {container.text: int(re.search(r'\d+', container.attrs['href']).group())
+                for container in soup.find_all('a', class_='group-catalog__group')}
 
     async def get_timetable_by(self, group_id: int, week: int):
         page = await self._request(f'/rasp?groupId={group_id}&selectedWeek={week}')
         soup = BeautifulSoup(page, features='html.parser')
         raw_table = soup.find('div', class_='schedule__items')
 
-        table = []
+        table = [[] for _ in range(7)]
 
         for cell in raw_table.find_all('div', class_='schedule__item'):
             pass
