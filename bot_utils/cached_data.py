@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import os
@@ -43,3 +44,9 @@ async def get_groups(institute: str, course: int) -> dict[str, int]:
 
     logging.info(groups)
     return groups
+
+
+async def get_timetable(group_id: int, week: int):
+    timetable = await api.get_timetable_by(group_id, week)
+
+    return timetable

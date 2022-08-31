@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 
@@ -11,7 +12,8 @@ import aiogram.utils.markdown as md
 
 from dotenv import load_dotenv
 
-from bot_utils.cached_data import get_facilities, get_groups
+from bot_utils.cached_data import get_facilities, get_groups, get_timetable
+from bot_utils.format_timetable import format_timetable
 from bot_utils.markups import get_institutes_markup, get_groups_markup
 
 load_dotenv()
@@ -20,19 +22,24 @@ API_TOKEN = os.environ.get("BOT_TOKEN")
 
 
 class CustomFormatter(logging.Formatter):
-    grey = "\x1b[38;20m"
-    yellow = "\x1b[33;20m"
-    red = "\x1b[31;20m"
-    bold_red = "\x1b[31;1m"
-    reset = "\x1b[0m"
     format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
 
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
     FORMATS = {
-        logging.DEBUG: grey + format + reset,
-        logging.INFO: grey + format + reset,
-        logging.WARNING: yellow + format + reset,
-        logging.ERROR: red + format + reset,
-        logging.CRITICAL: bold_red + format + reset
+        logging.DEBUG: OKBLUE + format + ENDC,
+        logging.INFO: OKCYAN + format + ENDC,
+        logging.WARNING: WARNING + format + ENDC,
+        logging.ERROR: FAIL + format + ENDC,
+        logging.CRITICAL: FAIL + UNDERLINE + format + ENDC,
     }
 
     def format(self, record):
@@ -120,6 +127,7 @@ async def process_group_code(message: types.Message, state: FSMContext):
 
     await Form.next()
     await state.update_data(group_code=message.text)
+    await state.update_data(group_id=groups[message.text])
 
     # Remove keyboard
     actions_kb = ReplyKeyboardMarkup(
@@ -143,13 +151,34 @@ async def process_group_code(message: types.Message, state: FSMContext):
 
 @dp.message_handler(lambda message: message.text == 'Выбрать другое направление', state=Form.timetable)
 async def send_another(message: types.Message, state: FSMContext):
-    logger.info('fghfhgjkdhgjjhdgkjhdkjghdhgdg')
     await Form.institute.set()
     await state.reset_data()
 
     institutes_kb = await get_institutes_markup()
 
     await message.answer("Выбери институт или факультет", reply_markup=institutes_kb)
+
+
+@dp.message_handler(lambda message: message.text == 'Расписание на эту неделю', state=Form.timetable)
+async def send_current_week(message: types.Message, state: FSMContext):
+    week = datetime.datetime.now().isocalendar().week - datetime.datetime(2022, 9, 1).isocalendar().week + 1
+
+    data = await state.get_data()
+    timetable = await get_timetable(data['group_id'], week)
+    logger.info(timetable)
+
+    await bot.send_message(message.chat.id, format_timetable(timetable), parse_mode=ParseMode.MARKDOWN)
+
+
+@dp.message_handler(lambda message: message.text == 'Расписание на следующую неделю', state=Form.timetable)
+async def send_current_week(message: types.Message, state: FSMContext):
+    week = datetime.datetime.now().isocalendar().week - datetime.datetime(2022, 9, 1).isocalendar().week + 1
+
+    data = await state.get_data()
+    timetable = await get_timetable(data['group_id'], week + 1)
+    logger.info(timetable)
+
+    await bot.send_message(message.chat.id, format_timetable(timetable), parse_mode=ParseMode.MARKDOWN)
 
 
 if __name__ == '__main__':

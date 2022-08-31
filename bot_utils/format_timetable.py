@@ -1,0 +1,38 @@
+from structs import ScheduleForTheDay
+import aiogram.utils.markdown as md
+
+
+def format_timetable(timetable: list[ScheduleForTheDay]):
+    import locale
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+
+    return md.text(*[format_day(schedule) for schedule in timetable], sep=f'\n\n{"- " * 50}\n\n')
+
+
+
+def format_day(schedule: ScheduleForTheDay):
+    days_of_week = schedule.date.strftime('%A')
+
+    if not schedule.lessons:
+        day_icon = '💤'
+    elif all(map(lambda x: x.is_online, schedule.lessons)):
+        day_icon = '🥱'
+    else:
+        day_icon = '⚰'
+
+    result_text = []
+    result_text.append(md.text(
+        md.bold(f'{days_of_week} {day_icon}')
+    ))
+    if schedule.lessons:
+        formatted_lessons = []
+        for lesson in schedule.lessons:
+            formatted_lessons.append(md.text(
+                md.text(f'{lesson.start}-{lesson.end}'),
+                f' {lesson.title} {"🟢" if lesson.is_online else "🔴"}',
+                f'\n{lesson.place}'
+            ))
+        result_text.append(md.text(*formatted_lessons, sep='\n\n'))
+    else:
+        result_text.append(md.text('День свободен'))
+    return md.text(*result_text, sep='\n')
