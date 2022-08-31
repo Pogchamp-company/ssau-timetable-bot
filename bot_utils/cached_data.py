@@ -6,6 +6,10 @@ from api import SsauAPI
 
 _institutes = None
 api = SsauAPI()
+try:
+    os.mkdir('data')
+except:
+    pass
 
 
 async def get_facilities() -> dict[str, int]:
@@ -19,8 +23,8 @@ async def get_facilities() -> dict[str, int]:
                 _institutes = json.load(json_file)
         else:
             _institutes = await api.get_institutes_and_faculties()
-            with open(filename, 'w') as outfile:
-                json.dump(_institutes, outfile)
+            with open(filename, 'w', encoding='utf-8') as outfile:
+                json.dump(_institutes, outfile, ensure_ascii=False, indent=4)
 
     return _institutes
 
@@ -34,8 +38,8 @@ async def get_groups(institute: str, course: int) -> dict[str, int]:
             groups = json.load(json_file)
     else:
         groups = await api.get_groups(institutes[institute], course)
-        with open(filename, 'w') as outfile:
-            json.dump(_institutes, outfile)
+        with open(filename, 'w', encoding='utf-8') as outfile:
+            json.dump(groups, outfile, ensure_ascii=False, indent=4)
 
     logging.info(groups)
     return groups

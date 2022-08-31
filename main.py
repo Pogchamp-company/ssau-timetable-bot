@@ -1,7 +1,3 @@
-"""
-This is a echo bot.
-It echoes any incoming text messages.
-"""
 import logging
 import os
 
@@ -90,7 +86,7 @@ async def process_institute(message: types.Message, state: FSMContext):
         return
 
     await Form.next()
-    await state.update_data(course=message.text)
+    await state.update_data(institute=message.text)
 
     courses_kb = ReplyKeyboardMarkup([[KeyboardButton(str(i)) for i in range(1, 6)]])
 
@@ -155,13 +151,6 @@ async def send_another(message: types.Message, state: FSMContext):
 
     await message.answer("Выбери институт или факультет", reply_markup=institutes_kb)
 
-
-# @dp.message_handler()
-# async def echo(message: types.Message):
-#     # old style:
-#     # await bot.send_message(message.chat.id, message.text)
-#
-#     await message.answer(message.text)
 
 if __name__ == '__main__':
     executor.start_polling(dp)

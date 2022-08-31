@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import re
 from datetime import datetime
 
@@ -22,6 +23,7 @@ class SsauAPI:
                     raise ConnectionError('Не удалось получить данные')
                 async with session.get(f'{self.HOST}{url}') as response:
                     status = response.status
+                    logging.info(f'Запрос к {self.HOST}{url}. Статус {status}')
                     if status != 200:
                         await asyncio.sleep(.5)
                         tries_count -= 1
