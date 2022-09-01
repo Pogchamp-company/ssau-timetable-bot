@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
+from typing import List
 
 
 @dataclass
@@ -8,7 +9,7 @@ class Lesson:
     is_online: bool
     place: str
     teacher: str
-    groups: list[str]
+    groups: List[str]
 
     start: str
     end: str
@@ -17,4 +18,4 @@ class Lesson:
 @dataclass
 class ScheduleForTheDay:
     date: date
-    lessons: list[Lesson]
+    lessons: List[Lesson]
