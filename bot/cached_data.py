@@ -8,14 +8,9 @@ from api import SsauAPI
 
 _institutes = None
 api = SsauAPI()
-try:
-    os.mkdir('data')
-except:
-    pass
 
 
 async def get_facilities() -> Dict[str, int]:
-
     global _institutes
     if _institutes is None:
         filename = 'data/facilities.json'

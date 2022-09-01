@@ -7,7 +7,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 API_TOKEN = os.environ.get("BOT_TOKEN")
 
 bot = Bot(token=API_TOKEN)
-storage = JSONStorage('bot.json')
+storage = JSONStorage('data/bot.json')
 dp = Dispatcher(bot, storage=storage)
 
 

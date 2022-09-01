@@ -32,7 +32,7 @@ async def send_current_week(message: types.Message, state: FSMContext):
     timetable = await get_timetable(data['group_id'], week)
     logging.info(timetable)
 
-    await bot.send_message(message.chat.id, format_timetable(timetable), parse_mode=ParseMode.MARKDOWN)
+    await bot.send_message(message.chat.id, format_timetable(timetable), parse_mode=ParseMode.HTML)
 
 
 @dp.message_handler(lambda message: message.text == TIMETABLE_FOR_NEXT_WEEK, state=Form.timetable)
@@ -43,7 +43,7 @@ async def send_next_week(message: types.Message, state: FSMContext):
     timetable = await get_timetable(data['group_id'], week + 1)
     logging.info(timetable)
 
-    await bot.send_message(message.chat.id, format_timetable(timetable), parse_mode=ParseMode.MARKDOWN)
+    await bot.send_message(message.chat.id, format_timetable(timetable), parse_mode=ParseMode.HTML)
 
 
 @dp.message_handler(lambda message: message.text == TIMETABLE_FOR_TOMORROW, state=Form.timetable)
