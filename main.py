@@ -3,7 +3,7 @@ import logging
 import os
 
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.contrib.fsm_storage.files import PickleStorage, JSONStorage
+from aiogram.contrib.fsm_storage.files import JSONStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, \

@@ -1,13 +1,14 @@
+from typing import List
+
 from structs import ScheduleForTheDay
 import aiogram.utils.markdown as md
 
 
-def format_timetable(timetable: list[ScheduleForTheDay]):
+def format_timetable(timetable: List[ScheduleForTheDay]):
     import locale
     locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 
     return md.text(*[format_day(schedule) for schedule in timetable], sep=f'\n\n{"- " * 50}\n\n')
-
 
 
 def format_day(schedule: ScheduleForTheDay):
@@ -20,10 +21,9 @@ def format_day(schedule: ScheduleForTheDay):
     else:
         day_icon = '⚰'
 
-    result_text = []
-    result_text.append(md.text(
+    result_text = [md.text(
         md.bold(f'{days_of_week} {day_icon}')
-    ))
+    )]
     if schedule.lessons:
         formatted_lessons = []
         for lesson in schedule.lessons:

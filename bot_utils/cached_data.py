@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+from typing import Dict
 
 from api import SsauAPI
 
@@ -13,7 +14,7 @@ except:
     pass
 
 
-async def get_facilities() -> dict[str, int]:
+async def get_facilities() -> Dict[str, int]:
 
     global _institutes
     if _institutes is None:
@@ -30,7 +31,7 @@ async def get_facilities() -> dict[str, int]:
     return _institutes
 
 
-async def get_groups(institute: str, course: int) -> dict[str, int]:
+async def get_groups(institute: str, course: int) -> Dict[str, int]:
     institutes = await get_facilities()
 
     filename = f'data/groups-{institutes[institute]}-{course}.json'
