@@ -28,8 +28,8 @@ def format_day(schedule: ScheduleForTheDay):
         formatted_lessons = []
         for lesson in schedule.lessons:
             formatted_lessons.append(md.text(
-                md.text(f'{lesson.start}-{lesson.end}'),
-                f' {lesson.title} {"🟢" if lesson.is_online else "🔴"}',
+                md.text(f'{lesson.start}-{lesson.end} {"🟢" if lesson.is_online else "🔴"}'),
+                f' {lesson.title}',
                 f'\n{lesson.place}'
             ))
         result_text.append(md.text(*formatted_lessons, sep='\n\n'))

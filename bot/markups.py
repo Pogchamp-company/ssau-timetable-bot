@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-from bot_utils.cached_data import get_facilities, get_groups
+from bot.cached_data import get_facilities, get_groups
 
 
 async def get_institutes_markup():

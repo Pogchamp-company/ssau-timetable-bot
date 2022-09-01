@@ -12,9 +12,11 @@ import aiogram.utils.markdown as md
 
 from dotenv import load_dotenv
 
-from bot_utils.cached_data import get_facilities, get_groups, get_timetable
-from bot_utils.format_timetable import format_timetable
-from bot_utils.markups import get_institutes_markup, get_groups_markup
+from bot.cached_data import get_facilities, get_groups, get_timetable
+from bot.format_timetable import format_timetable
+from bot.markups import get_institutes_markup, get_groups_markup
+from bot.utils import get_current_week_number
+from structs import ScheduleForTheDay, Lesson
 
 load_dotenv()
 
@@ -161,7 +163,7 @@ async def send_another(message: types.Message, state: FSMContext):
 
 @dp.message_handler(lambda message: message.text == 'Расписание на эту неделю', state=Form.timetable)
 async def send_current_week(message: types.Message, state: FSMContext):
-    week = datetime.datetime.now().isocalendar().week - datetime.datetime(2022, 9, 1).isocalendar().week + 1
+    week = get_current_week_number()
 
     data = await state.get_data()
     timetable = await get_timetable(data['group_id'], week)
@@ -171,8 +173,8 @@ async def send_current_week(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(lambda message: message.text == 'Расписание на следующую неделю', state=Form.timetable)
-async def send_current_week(message: types.Message, state: FSMContext):
-    week = datetime.datetime.now().isocalendar().week - datetime.datetime(2022, 9, 1).isocalendar().week + 1
+async def send_next_week(message: types.Message, state: FSMContext):
+    week = get_current_week_number()
 
     data = await state.get_data()
     timetable = await get_timetable(data['group_id'], week + 1)
