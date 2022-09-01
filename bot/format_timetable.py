@@ -6,7 +6,7 @@ import aiogram.utils.markdown as md
 
 
 def format_timetable(timetable: List[ScheduleForTheDay]):
-    return md.text(*[format_day(schedule) for schedule in timetable], sep=f'\n\n{"- " * 50}\n\n')
+    return md.text(*[format_day(schedule) for schedule in timetable], sep=f'\n\n- - - - - - - - - -\n\n')
 
 
 def format_day(schedule: ScheduleForTheDay):
@@ -19,17 +19,17 @@ def format_day(schedule: ScheduleForTheDay):
     else:
         day_icon = '⚰'
 
-    result_text = [md.text(
-        md.bold(f'{days_of_week} {day_icon}')
-    )]
+    result_text = [
+        f'<b>{days_of_week} {day_icon}</b>'
+    ]
     if schedule.lessons:
         formatted_lessons = []
         for lesson in schedule.lessons:
-            formatted_lessons.append(md.text(
-                md.text(f'{lesson.start}-{lesson.end} {"🟢" if lesson.is_online else "🔴"}'),
-                f' {lesson.title}',
-                f'\n{lesson.place}'
-            ))
+            formatted_lessons.append(
+                f'{"🟢" if lesson.is_online else "🔴"} <i>{lesson.start} - {lesson.end}</i>'
+                f' <i style=\"color:#fc5252;\">{lesson.title}</i>'
+                f'\n{lesson.place} {lesson.teacher}'
+            )
         result_text.append(md.text(*formatted_lessons, sep='\n\n'))
     else:
         result_text.append(md.text('День свободен'))
