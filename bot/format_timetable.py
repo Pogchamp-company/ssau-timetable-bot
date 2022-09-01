@@ -1,18 +1,16 @@
 from typing import List
 
+from bot.utils import get_weekday_from_date
 from structs import ScheduleForTheDay
 import aiogram.utils.markdown as md
 
 
 def format_timetable(timetable: List[ScheduleForTheDay]):
-    import locale
-    locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
-
     return md.text(*[format_day(schedule) for schedule in timetable], sep=f'\n\n{"- " * 50}\n\n')
 
 
 def format_day(schedule: ScheduleForTheDay):
-    days_of_week = schedule.date.strftime('%A')
+    days_of_week = get_weekday_from_date(schedule.date)
 
     if not schedule.lessons:
         day_icon = '💤'
