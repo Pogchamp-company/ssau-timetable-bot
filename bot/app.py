@@ -1,13 +1,14 @@
 import os
 
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.files import JSONStorage
 from aiogram.dispatcher.filters.state import StatesGroup, State
+
+from bot.storages.SqlLiteStorage import SqlLiteStorage
 
 API_TOKEN = os.environ.get("BOT_TOKEN")
 
 bot = Bot(token=API_TOKEN)
-storage = JSONStorage('data/bot.json')
+storage = SqlLiteStorage("data/bot_state.sqlite")
 dp = Dispatcher(bot, storage=storage)
 
 
